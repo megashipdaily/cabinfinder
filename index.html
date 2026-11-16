@@ -222,7 +222,7 @@ function cabinAt(deck, side, pos) {
 const ord = n => { const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
 const clean = s => s.trim().replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/[/?#].*$/, '').toLowerCase();
 
-let current = 0, isExample = true, side = 'S', missQuery = null;
+let current = null, isExample = false, side = 'S', missQuery = null;
 
 // ---------- header ----------
 document.getElementById('booked').textContent = N.toLocaleString('en-CA') + ' cabins booked';
@@ -242,6 +242,13 @@ document.getElementById('updated').textContent = UPDATED;
 // ---------- result + deck ----------
 function renderResult() {
   const el = document.getElementById('result');
+  if (current === null && missQuery === null) {
+    el.innerHTML = `<div class="ticket"><div class="who"><span class="tag">Your cabin is waiting</span></div>
+      <h2>${N.toLocaleString('en-CA')} cabins on ${DECKS} decks</h2>
+      <div class="facts"><span>Type your username above to find your balcony.</span></div></div>
+      <div class="cabin-no"><div class="label">Cabin</div><div class="num outlined gold">#?</div></div>`;
+    return;
+  }
   if (missQuery !== null) {
     el.innerHTML = `<div class="ticket"><div class="who"><span class="tag miss">Not on board yet</span></div>
       <h2>@${escapeHtml(missQuery)}</h2>
@@ -259,6 +266,7 @@ function renderResult() {
 }
 function renderDeck() {
   const el = document.getElementById('deck');
+  if (current === null && missQuery === null) { el.innerHTML = `<h3>Your deck</h3><p>Search for your username to see your deck and who's next door.</p>`; return; }
   if (missQuery !== null) { el.innerHTML = `<h3>Your deck</h3><p>Search for a username that's on board to see its neighbours.</p>`; return; }
   const p = place(current);
   const narrow = window.innerWidth < 640;
@@ -482,7 +490,7 @@ function drawShip(t) {
   }
 
   // ---- highlight + pin ----
-  if (missQuery === null) {
+  if (missQuery === null && current !== null) {
     const p = place(current);
     if (p.side === side) {
       let x = supX1 - (p.pos + 1) * cellW; if (side === 'P') x = CW - x - cellW;
@@ -569,7 +577,7 @@ document.getElementById('form').addEventListener('submit', e => {
   if (index.has(s)) select(index.get(s), false); else miss(s);
 });
 
-select(0, true);
+renderResult(); renderDeck();
 let rw = window.innerWidth; window.addEventListener('resize', () => { if ((window.innerWidth < 640) !== (rw < 640)) renderDeck(); rw = window.innerWidth; });
 if (reduce) drawShip(0); else requestAnimationFrame(loop);
 </script>
