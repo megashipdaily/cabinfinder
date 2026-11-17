@@ -92,6 +92,14 @@ button:focus-visible, a:focus-visible, .sugg button:focus-visible { outline: 4px
 .cabin-no .num { font-size: clamp(64px, 12vw, 120px); line-height: .9; font-variant-numeric: tabular-nums; }
 .cabin-no .num.gold { color: var(--gold); }
 
+.plan { margin-top: 26px; background: var(--paper); border: 3px solid var(--ink); border-radius: 22px; box-shadow: 0 6px 0 var(--ink); padding: 18px; display: grid; gap: 12px; }
+.plan[hidden] { display: none; }
+.plan.pop { animation: planPop .45s cubic-bezier(.2, 1.4, .4, 1) both; }
+@keyframes planPop { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: none; } }
+.plan-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px 16px; flex-wrap: wrap; }
+.plan-head h3 { margin: 0; font: 900 22px var(--display); text-transform: uppercase; }
+.plan-head span { color: var(--muted); font-size: 15px; font-variant-numeric: tabular-nums; }
+.plan svg { display: block; width: 100%; height: auto; }
 .ship-card { margin-top: 28px; background: #173a78; border: 3px solid var(--ink); box-shadow: 0 6px 0 var(--ink); border-radius: 22px; padding: 14px; }
 .ship-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 4px 6px 12px; }
 .ship-head h3 { margin: 0; font: 900 20px var(--display); color: #fff; text-transform: uppercase; text-shadow: 0 2px 0 rgba(0,0,0,.35); }
@@ -117,9 +125,10 @@ button:focus-visible, a:focus-visible, .sugg button:focus-visible { outline: 4px
 
 .builds { margin-top: 22px; display: grid; gap: 12px; }
 .builds h3 { margin: 0; font-size: 26px; }
-.builds ol { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.builds ol { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
 .builds li { display: flex; gap: 12px; align-items: flex-start; background: var(--paper); border: 3px solid var(--ink); border-radius: 18px; box-shadow: 0 5px 0 var(--ink); padding: 14px; }
-.builds li div { display: grid; gap: 2px; }
+.builds li div { display: grid; gap: 2px; min-width: 0; }
+.builds li span:not(.badge) { overflow-wrap: anywhere; }
 .builds li b { font: 900 17px var(--display); text-transform: uppercase; }
 .builds li span:not(.badge) { color: var(--muted); font-size: 15px; }
 .builds p { margin: 0; color: #e9f1ff; font-size: 15px; }
@@ -168,6 +177,8 @@ footer a { color: var(--gold); font-weight: 700; }
 
   <section class="result" id="result" aria-live="polite"></section>
 
+  <section class="plan" id="plan" hidden aria-live="polite"></section>
+
   <section class="ship-card">
     <div class="ship-head">
       <h3 id="shipTitle">The ship today</h3>
@@ -182,9 +193,11 @@ footer a { color: var(--gold); font-weight: 700; }
   <section class="builds" aria-labelledby="buildsTitle">
     <h3 id="buildsTitle" class="outlined">Built by the comments</h3>
     <ol>
-      <li><span class="badge">1</span><div><b>Pool and hot tub</b><span>Day 2 vote, tied at 1 like. Suggested by @tommyt_shreds.</span></div></li>
-      <li><span class="badge">2</span><div><b>Lounge with a pool table</b><span>Day 2 vote, tied at 1 like. Suggested by @mabaramba_.</span></div></li>
-      <li><span class="badge">3</span><div><b>Cruise-ship refit</b><span>Captain's pick from the Day 2 comments. Suggested by @adam.wedderburn.</span></div></li>
+      <li><span class="badge">1</span><div><b>Pool and hot tub</b><span>Day 2 vote, tied at 1 like. Suggested by @tommyt_shreds</span></div></li>
+      <li><span class="badge">2</span><div><b>Lounge with a pool table</b><span>Day 2 vote, tied at 1 like. Suggested by @mabaramba_</span></div></li>
+      <li><span class="badge">3</span><div><b>Cruise-ship refit</b><span>Captain's pick from the Day 2 comments. Suggested by @adam.wedderburn</span></div></li>
+      <li><span class="badge">4</span><div><b>RC plane runway</b><span>Day 3 vote, 135 likes. Suggested by @parker_the_great4.0</span></div></li>
+      <li id="secretBuild" hidden><span class="badge">5</span><div><b>RC car race track</b><span>Special request. Asked for by @bentleybondarchuk1</span></div></li>
     </ol>
     <p>The most liked comment on each reel builds the next addition. Look for the numbered markers on the ship.</p>
   </section>
@@ -199,7 +212,7 @@ footer a { color: var(--gold); font-weight: 700; }
 
 <script>
 // Cabin order: the six Day 1 followers keep cabins #1-6, then everyone else in the order they followed.
-const NAMES = ["rayen_8424", "mabaramba_", "007_pickle", "ii.7zv", "tommyt_shreds", "m4x.352", "user_111260", "kayjekks", "ethanhall07", "zach38140", "karl34526", "yogiharwani", "jackjack.243", "samuelmoshkovych", "https.an3le", "rocky_jone5", "nic.digirolamo", "gclough840", "kemmyssss", "7386emiliano", "korbynfebel1234", "coop310707", "adrianl_76", "x.a.n.d.a.r_69", "duuu_maaa", "noah._wgn_", "parker_the_great4.0", "lewis.blagg", "pdub407", "michael_r_bones", "ochoa_jermiswtx0", "tiger.64278615", "lilnando209", "soccer_ab6", "j_.luna_", "teo_l1u", "junior_amau", "trev.eisele1", "jake_dr_", "plarg21", "greygriff56", "sayan.patel1102", "philippe_h_08", "pekrpeter", "anthony.4.11", "27_tonio_", "random._.boi_", "dylan_deluxe", "walkerogden6060", "niko05.9018", "j24.707", "_itzmemma", "crazycatperson2018", "7r__j7_on_tt", "fraser.maciver", "drippler__", "jason._fe", "kooldudez22", "mortonsammy2012", "swetang_shah_", "cho_businesss", "elukes07", "ellsbells922", "rileycoolblue", "bossupluhtez", "rhy5_2502", "xmchfr", "bri4n_379", "big_john7429", "chance.stephens08", "finn_otis30", "czqrny.jr", "alexiaguevara935", "1tsyg_lon167", "brogx61", "olivershoaf7", "luchmar_woodley", "luke.lvu", "userban199", "teagancharlesgormley", "mr.takeyurbich", "adam.wedderburn", "dj_mavusana_official", "unknown.dxzz", "wicho.beans", "stayinblessed11", "eiselsteinl", "its.jace23", "joao.murilo.tenfen", "mendiolanathaniel8", "h.e.nist", "lebattlebus27", "adamfry2813", "dreamphysique107", "_jvsalas_", "joelpzy42", "d33gz1235", "josemon3838", "bradshawforlif3", "bennet_ger1446", "sso.blondegirls.inc_", "salty_luke211", "therealbatgod1", "firefighterlosovelez", "619._daygo", "marlon_the_loser", "rashud_da_goat69", "sound_and_fury_", "mushroomhead26", "francisco_c_ribeiro", "fisher_cavanaugh", "vexii.fuentes", "timtjeerdsma1305", "jace_nees777", "rl217289", "teye.smets", "bagger_bubz", "meyerfordsnow", "ajthegoat333", "_braedon_marcus_", "immortalsnaill", "coledettmann", "colewaters13", "austinspodney", "98_ranga", "schweppes_cranberry", "mykelmendez53", "boboweller1", "sebdiznuts", "caleblr05", "trey78mccoy", "wyatt_bishop212", "chuckle_tuck", "zephyr.mesfn", "q20_kayden", "hrgoalex", "martin.kostanjevec", "tiktokexa57", "followthereaper6.66", "jared.2828", "filipanacker", "l_col_00", "1887_.brayden", "tudor.alexandru.146", "johnnyw_97", "brayd0nwalt", "jurkovic__borna", "mewhen_lobotomy", "dio.goagapito", "harlanpalle", "j3_backdoor", "dre_574", "elvi.nn3", "cost_co_kid", "whitestarliner64", "precise_thing", "mlsnextwest", "thomas833874", "herr_quattro", "aly_ulloa", "zeno_macculi", "just.tallis9090", "justinnick05", "jaylon.10.pratt", "adrian_bisnath", "thewonton04", "guy_maverick1", "choulis_photo", "violam2011", "hain1_8", "fraser_b10", "skyfallen404", "jy_j1k", "david_loco123455", "whitecholate55", "bigj2233_", "jakubsienkiewicz2947", "braedentims", "gavin659630", "jonny_boy49", "sae2sleepy67", "joaopradolourenco", "iwantacheeseburgerrightnow", "xander.malmgren", "n.t_dom", "prestonspears5", "yourfavprgio", "x._schye_.x", "carter_krey", "albertsluga48", "eaglesfan7774423", "anders.ode", "pinkney_ben", "jimmyford3000", "mike_cox2674", "da.mion2025", "itsyodadonnie", "sargsyan_olymp", "weilee_yeap", "boonepronold", "collin_talaina", "chiten_nugget", "oli.hejnow", "thijsding", "thelajewjew", "senjufn__oway", "g59a1dn", "dre_da2", "tbavi_n", "briankelly_8", "not_sonick_2026", "grif.fith117", "griddy_grady", "le0n_765", "fweli6x_", "jayleelohse", "izaiahtheking_", "jeremy2dawk", "jam26187", "chinesechippy67", "hampter_man10", "eliano_the_dude", "tjp272", "ale.xdevine", "devin.the.goat.shore", "jacob_strozier", "tht01xj", "rilejansy15", "pinheadlarry2026", "stanmanthefig", "andreutubeta", "cooper.botts", "e_dac11", "codymcqueston", "8610patrick", "fernandochxx", "vancer_ytr2", "oliver_7455", "messnerfinn", "darren_sammartino", "eskilvestli", "ro.nan3445", "liamd00ley", "mrnuggy556", "hannahmichy08", "zack.haskins16", "ash.er.fast", "this_man259", "e.anderson.2030", "jeremiah_wanye_slack", "therealpondking", "erik_wood68", "spencer_kennedy_", "p12980852", "yates_surfing", "chillhero84", "jaydeng0613", "coleryanrobinson", "perlagiesbrecht", "adam.the.ajr.fan11.11", "braydenstorm0", "j_b_allbee", "tjidoux725", "theotisx", "robert_cooney13", "annaclairebmartin", "psyko_day_walker", "kevindotson1", "nothing_bad_racing", "eternal_memesheheheh", "drewc79697", "clearsight5555", "cdawg4372", "brycen_suemori", "preaton_daniels", "among_tico_yt", "weemzy23", "itzcloudzzz", "jack_ferrari450", "carterskates29", "emans_cracklab", "dirtroad_rebel", "olliverio_901", "jojo.gthl10", "coltt581", "luhh_118", "rafethesoontonbepilot", "nick_vince", "cam682964", "rafita7938", "matheopoiriers", "ronnie_usherenko", "nash.siemens", "logan_o_r", "olicoco2007", "17adam77", "noah_campbell456", "dax_always_be_fishing3", "jdogswab_20", "ela_plichta2007", "that0ne_weirdo", "nessa_confessa.6", "jaxson_soccer48", "alexjclark615", "razor_noah", "laightonallen", "kannonkensing", "logan.o1070", "girouard_gavin", "melaniemartin7808", "sharshy9900", "xbox.taterman", "harpermadduxk", "wilsoncalam", "thatone2012hemi3", "_ellll777", "jdowdall92", "masonspomer", "farmboy__06", "georgiashaw131", "vitaminmatt1", "tyler_pirc", "victorbitzel", "zach.asa", "the_epic_cena_fan_", "human.guy123", "burgerburgan", "klausaviation", "bonix_twink", "king.shootahbihh", "junior47838", "lucas.8157", "alanthompson2108", "ben_reust", "ljolly09", "lucas.n.t0907", "gautelehne", "bradleyjucha", "ishansinha328", "daniel.v.meehan", "calebbond_007", "brody_glaze18", "brodyweibs1525", "william.bryan.3323", "rl.warden", "1legboy", "luca_looops", "ethanfoutch", "chunk_moon202", "kaiapoboy", "jstdj.2", "luke_sharrad", "kaden_l00", "johnmeade414", "trace_boutwell", "zr1_.corvette", "redn_eck308", "jayy__075", "x__kefe__x", "jacobdeluca01", "landon_sanders2009", "powdersugrr", "chairmanrou6", "samuel2539393", "free_bird.chicken", "church_thefur", "simo310507", "cade_farmer09", "yuu_igdrasil", "tobybeanslarson", "faolin2008", "ghsurfis", "kyle.r_21", "masonlabinski", "giovannixcriddell", "grahamduckman", "zachforrest18", "cote_bidwell1284", "spudinator404", "allen.ray.1656", "definetlyderek123", "kieferging", "madison_walther", "yoshy5672", "shipman_owen", "dwitta223", "newoffical_househusband", "kranjis_mcbasketball69", "feral.vile.vermin", "edd_m33qp", "quinn_mcfadin4", "nomadic_jackel", "mitmiller", "agressivepizza1", "slavko_accident", "2550fyo", "wirebaughnathan", "tomo_mcsorley", "blake_dasnake65", "jacob_hh23", "harrisonmailes", "wes.themess15", "_colto_n", "jetfox144", "izaiah_r18", "evannemchik", "ejdat_kid12", "franco_vlok", "tr3x2012", "eli.westgate", "klc7hl", "hj_blxde11_55", "eyandouglas", "scottskarvan", "dominichernandez1234", "chadpjeddie", "tthomas_mullerr", "crystallskull128", "mk3y_22", "gabekeller0212", "corunojustinelee", "cj17471", "dave_ich33", "joshg664", "middleclass_mx5", "la.princessawtf", "bigimacdaddy", "josh._.maxwell97", "ehcanadian69", "esther_knowes_best", "daniel774626", "jonahroberts45", "noey.suter", "yba1_8", "kevin.kowitz", "cade_austin2", "gb_jordan_", "knoonan027", "thisisethanhere", "i.ama.surfer", "tylerhanson57", "caleb.st.pierre", "treereaper31", "brice.moctezuma", "rylan.h08", "max.n.cheese.official", "the.potatoking17", "cepknight_8", "_bikelife_gavin", "banderson_829", "mylesturney2", "trcoops09", "cwalleh77", "jake.meister1175", "keviin_salaas", "eighteengump", "drake_deweerd", "auto_and_aero", "jade.low1", "user.94926333", "the_eddiefiallo", "butchconnorsjr", "bry_frm305", "blakelombardo2015", "joshig238", "clbbrumley", "brooklyn_2012___", "ojayo_nightz", "khumyboih", "ashtyn_hill730", "alfieferguson1450", "charliemig2014", "quinten.simoens2", "lucas_mould", "connor_mountjoy", "brodycoxson", "jaydenf781", "lecvin", "carlsenduff", "connor_appleby02", "arh_aant", "paytrain96", "zekeramire", "eli_brink1", "yo_guysy599", "farv15", "chase_boats", "carvell.32", "prettyuser._.lmao", "aydenhull132", "wil.lfin", "thecoch420", "tyler_wood666", "vigrosam", "idk_anymore_1487", "towels.478", "isaia.kc", "robbienyirfea", "pierson.fletcher", "josh_helkaa", "sc.vogt", "zach.bat14", "demt1t3s", "josh.mace2103", "colbath.jack", "stephen_ramsay_", "taylorwhitted10", "noahbrooks.trp", "aye_yeaux", "tucker_moto17", "yeah_nah_yea", "mason_morello38", "liamhopkins00", "si_titoj", "stephens.v4", "sssarspence", "ethan_marines", "damiasshadowblade", "metro_man_megamind", "marrii_banzzzz", "rydercraven44", "jaykobgeorge", "c_macdonald92", "fvckin.lvcky", "eddie_bruddah", "the_mr._arnold", "mrx.2966", "karson.stover", "hammondjax13", "connoralkestrup", "meghanwierzbicki01", "paxton_rathbun", "im.dead51", "keegmac1", "urbabruzi", "b_wils09", "cru_ahhh", "talyn_cheatham", "tyler5202009n", "punk_bunny06", "skinnerdemetri", "lillyflxwer", "jadentookthat", "tj.scribe", "maxi_moose27", "oskapew123", "leighton0504", "aviationtpa", "brianmac.26", "quad_the_ripper", "wyattwaller_", "c_schendy", "printlyperfect_ig", "the_goat_at_soccer67", "john.fields2026", "miguelgelacio1031", "fishmanvr32", "maybe_memes_here", "abil_for_you", "nts_cars", "broadway.carson", "nicholas.9755", "connor_dunneee", "liv3han_", "a_man_named_larry", "carter.kubow", "zigmeisterman", "charlie_backaitis_fishing", "chill_dude_69_the_2nd", "brandon783017", "johnny_conn77", "jake_hansen69", "d4m0nj4m3s", "iles.owen", "carson.huntley.94", "c.w._2025", "kenney_the_phantom", "ao.thatsit", "connorrowland14", "william_duramax007", "olinekd61", "kokoro_moeru", "bodash1018", "content.of.quality", "el_poopitothethird", "trueboblove", "dj_plays_music", "nootnoot682", "hexedbysasha", "loisprime", "ethancarroll_42", "agamkhokharr", "lewiswood782", "spencerneufeld2", "tatecondon2019", "ytmavbro19", "camclark023", "thebetterluke8", "thatlawnkidcam", "elijahw.ebster", "gavenhorrell", "dylanmichaelcoleman", "mjramirez0217", "big_man_on_deck_", "levijp14", "legend68484306", "caseybyrdwell", "tateglanzer", "cohen_lester21", "minefreet2", "joel73531", "pierson.0507", "leobonawandt", "jacksonblair90", "getsousad", "thejetterman", "zach676767676767", "ky.max123", "mechagodzilla8129", "liamvoigt1234", "vanskates39", "ducks_not_4_sale", "debruyckerr_s", "bradfield.sean_", "stilanden", "ehhhhh3186", "zip66_2", "ymcjojo", "steven6964davis", "cattlefarmnlife", "greenboihsb", "gecko.8840356", "theboog23", "willow_8901", "tkettle_", "chunf___", "carter.tiley6969", "shaemuss16", "hyundai_boi", "i.love_dragon.ball_z", "jimbobob_bb8", "ocean18325", "trd_tacos", "charles__188", "pietertje_05", "kinghostt_", "abdulbakko", "jonah_gouery", "thatblackman809", "garza1362", "ratboybsvr", "will.i.8m", "chameleon.8179003", "dmminshall", "mitchoo_0", "graham.o8", "daxtonvanbebber", "jxkeller99", "kokosinskijacob", "puget_sound.hound_", "wriggo211", "bighappy_13_", "evilassgamer", "jasper_throop", "jordanbonifield_", "martinwynn2009", "_ben_sellar_", "bxdbyy11", "aid5.05", "yyckane", "arrazab_eli", "davidrmurphy97", "rosebud4896", "smokeythehoghead", "dis.arp.difhight", "enzo.shreds", "tristindoudiet", "atlee_myers", "navyjuco", "nolan.804", "miles_pham_trumpet", "roberto.reyez582019", "trumpisthebest43", "luc_bridge", "nic_perps", "sophiabrown65", "davbarber04", "delson_4784", "itsjamesd2024", "banana__________1", "ry_2twizzy", "braedennilges", "brandon_the_jet", "wyatt88455", "evan84916", "harry_emm48", "brysonfr69", "anthem4.4.3", "dtb.aaron1", "nolanhitchner69", "2010_expedition", "the_spencetron", "ch28.38", "ayden.hunt.25", "solomonm05", "gagechicola", "ilovewilliambyron", "quandaviante.j", "zane31725", "wolfie_loko_666", "max_wolgast2.0", "the.official.lewis", "alex_designs2448", "korbinbrammer", "e_daney18", "mitch_jns06", "zacharytiberio", "braydenh.44", "isaka_indostan", "will_garnettt", "justt_carter", "hanumanulapraharsh", "anhnguyen4thewin", "by.yoel.photography", "jacob_c_davis", "kraysonricker", "saucey_75", "lko_cfd", "772_chrisk", "jojo_a_p_b", "adam.blakeney", "master_skyhawk", "blakenokes", "hi_bigass21", "ttvcook_", "doodydobs", "olibob17", "jjlessley", "deuce_7k", "jackbloomingburg", "piper_christ_l", "blue_reaper61", "furfag6644", "kota12.mp3", "sesehang.n11", "_queen.41bee", "og_goatroper", "matthewcfey", "random_gaming847", "the_0g_g", "noahhawkheredia", "gus_my_name_", "egocentricpaul", "flossvoyager", "stevenpattersonn", "cyle_myers55", "rory.mcclung", "_arjunprasad543", "48freedahustle", "owen.sivertsen21", "lucas_swiingle", "carterinman6", "braxtonleeglenn", "yeitsconnor", "ducatchance", "skinniboigamer", "danielbangor1", "jndhyn", "savvyhopef", "ghughes2504", "lukie0328", "saltyv_v", "zed_tm19", "jamesjhall4", "riley_12_danielson", "ely67667", "bigboibray1217", "jordancalhoun919", "tarverkeenan", "st4r_mj08", "landensmith656", "bo_uis", "jordanc4557", "greysonsmant", "jallo12825", "leebennett720", "nuke_a_delic652", "haygamer08", "sebastianleemartinez", "starnerd3.0", "adamsmithty123", "erichhaley739", "christopherhouston784", "notanyofyourinterest", "_juke_box_hero", "luke.the.fish", "chrisnotfound_32", "mike.jenkins13", "gunnerhommer", "rhyinlindsey", "1979fourdoorlincolncontinental", "iyah.salud", "gordon_lam____", "gamer.juice41", "tylerweston__", "jamesdacheese", "rupdog15", "bennettduke8", "marco_mart_03", "baylin_dixon", "luke_howy16", "alexandria501911", "compnerd97", "alex_gorlesky", "zac_berie", "zacchh69", "evvanroy", "bentulafono_", "caleb_loves_guitars02", "mullock_bobby", "michaelhiggins781", "he__luvzjordy1", "felix_christian.11", "blaze120691", "koneko.hana", "callum_grovez", "codym2031", "ltdann199", "darcy_buckley76", "partin4740", "eneal2004", "izzy.eblen", "alex.delamar11", "mijah_cephas17", "mickey_vdm", "hunter_reed_duncan", "jamesleech100", "darkrayven001", "ryan_andrewzz", "localflourideaddict", "joeperry04", "sandy_fish63", "luh.lando_0", "jacques_coetzer_", "thomas_h4wke", "alobaidi_hamzah", "fontenot.jayden", "yahyakhan9159", "jsmithjr017", "ko2x._", "iguessimgodnow", "karstenben_11", "uzr_sxmson09", "denis1248525", "blackberrytheminilop", "yyc.rachael08", "owenorr_", "brendandavis593", "diesel_davis_808", "worldwide_timestamp", "11sentinel11", "mcdowell_tucker", "roddles135", "adventure.with.alexander", "dtn_jayquan123", "slow_s3_xo", "chriscarty29", "coltks10", "evanzenk", "amaris35400", "702._mikey", "benjamingarnicaiii", "lennoxbergstrom", "tejay_idk", "ryanmulvay05", "sleepydev", "maxsavage680", "taddpole_oficial", "matthewjfraser14", "unko.zacko", "warren23574", "jeffwitt2022", "3ryd.er", "aiden_diefenbacher", "w.ill20.06", "jimbeatt09", "db721645", "thee_official_diorbabyyy", "shao_zhe_", "lmorton5233", "john3332884", "dylan_pentathlon53", "sam_hurn348", "brickships1912", "fredtyler223", "sujayr.talekar", "gadsbyalex", "ewanjardine_11", "kyeronstrickland", "connor_ess3x", "santiago246016", "notsoshort.amk", "ethangordonboxing", "aguycalledbob_", "fillinghamdeven", "aljohanncyruscasanza", "sophclimpsx", "mapbppbhavya", "danwiggins1996", "kaylow_13", "hyfrmda2358", "jacob.peters6", "koltenlittle_8", "jay_gomez24", "i.churchland13", "notnuggets123", "marcelskacel12", "i_am_here_but_i_am_confused", "jamesp0tato", "jordy_is_goated", "elijahhammock", "taanemainwaring", "bayleeshianne", "rayanhamza314", "coner9035", "michael.morleyb", "braxton_miller027", "melodenzelo", "velek_21", "jacksonkilburn29", "chicojay257", "farmer_0601", "travy_t_99", "yayas._w0rld", "itssnapping__noway", "john_elmendorf", "ryan_emerson_kershner", "horse.636132", "serranovaldivieso", "whadaflizzy", "matthew_karasack_48", "ladiesm8n217", "estellkajanae", "4._noway", "ka_caisson_", "zarlenga_lucas", "ggwyhp", "bobth_ebuilder927", "choochbot123", "luk8sm", "venom_plays7", "ranfateh_singh_natt", "gmt.1of1", "bigdunk1121", "davidoltenacu", "brodie_martin.11", "cateye6oh", "midnight_gaming77", "mrjoeybeans", "aprylf4", "jvictor.t", "patricialyons585", "liltoaster174", "chrisorourke123", "its.deivvv", "pelle.frey", "tobiastrengereid", "kevinthe_caniac72", "ekobielat", "railroader_landon", "stevengauthier574", "jonas_zib_fabricius", "autobolt2007"];
+const NAMES = ["rayen_8424", "mabaramba_", "007_pickle", "ii.7zv", "tommyt_shreds", "m4x.352", "user_111260", "kayjekks", "", "zach38140", "karl34526", "", "jackjack.243", "samuelmoshkovych", "https.an3le", "rocky_jone5", "nic.digirolamo", "gclough840", "kemmyssss", "7386emiliano", "korbynfebel1234", "coop310707", "adrianl_76", "x.a.n.d.a.r_69", "duuu_maaa", "noah._wgn_", "parker_the_great4.0", "lewis.blagg", "pdub407", "michael_r_bones", "ochoa_jermiswtx0", "tiger.64278615", "lilnando209", "soccer_ab6", "j_.luna_", "teo_l1u", "junior_amau", "trev.eisele1", "jake_dr_", "plarg21", "greygriff56", "sayan.patel1102", "philippe_h_08", "pekrpeter", "anthony.4.11", "27_tonio_", "random._.boi_", "dylan_deluxe", "walkerogden6060", "niko05.9018", "j24.707", "_itzmemma", "crazycatperson2018", "7r__j7_on_tt", "fraser.maciver", "drippler__", "jason._fe", "kooldudez22", "mortonsammy2012", "swetang_shah_", "cho_businesss", "elukes07", "ellsbells922", "rileycoolblue", "bossupluhtez", "rhy5_2502", "xmchfr", "bri4n_379", "big_john7429", "chance.stephens08", "finn_otis30", "czqrny.jr", "alexiaguevara935", "1tsyg_lon167", "brogx61", "olivershoaf7", "luchmar_woodley", "luke.lvu", "userban199", "teagancharlesgormley", "mr.takeyurbich", "adam.wedderburn", "dj_mavusana_official", "unknown.dxzz", "wicho.beans", "stayinblessed11", "eiselsteinl", "its.jace23", "joao.murilo.tenfen", "mendiolanathaniel8", "h.e.nist", "lebattlebus27", "adamfry2813", "dreamphysique107", "_jvsalas_", "joelpzy42", "d33gz1235", "josemon3838", "bradshawforlif3", "bennet_ger1446", "sso.blondegirls.inc_", "salty_luke211", "therealbatgod1", "firefighterlosovelez", "619._daygo", "marlon_the_loser", "rashud_da_goat69", "sound_and_fury_", "mushroomhead26", "francisco_c_ribeiro", "fisher_cavanaugh", "vexii.fuentes", "timtjeerdsma1305", "jace_nees777", "rl217289", "teye.smets", "bagger_bubz", "meyerfordsnow", "ajthegoat333", "_braedon_marcus_", "immortalsnaill", "coledettmann", "colewaters13", "austinspodney", "98_ranga", "schweppes_cranberry", "mykelmendez53", "boboweller1", "sebdiznuts", "caleblr05", "trey78mccoy", "wyatt_bishop212", "chuckle_tuck", "zephyr.mesfn", "q20_kayden", "hrgoalex", "martin.kostanjevec", "tiktokexa57", "followthereaper6.66", "jared.2828", "filipanacker", "l_col_00", "1887_.brayden", "tudor.alexandru.146", "johnnyw_97", "brayd0nwalt", "jurkovic__borna", "mewhen_lobotomy", "dio.goagapito", "harlanpalle", "j3_backdoor", "dre_574", "elvi.nn3", "cost_co_kid", "whitestarliner64", "precise_thing", "mlsnextwest", "thomas833874", "herr_quattro", "aly_ulloa", "zeno_macculi", "just.tallis9090", "justinnick05", "jaylon.10.pratt", "adrian_bisnath", "thewonton04", "guy_maverick1", "choulis_photo", "violam2011", "hain1_8", "fraser_b10", "skyfallen404", "jy_j1k", "david_loco123455", "whitecholate55", "bigj2233_", "jakubsienkiewicz2947", "braedentims", "gavin659630", "jonny_boy49", "sae2sleepy67", "joaopradolourenco", "iwantacheeseburgerrightnow", "xander.malmgren", "n.t_dom", "prestonspears5", "yourfavprgio", "x._schye_.x", "carter_krey", "albertsluga48", "eaglesfan7774423", "anders.ode", "pinkney_ben", "jimmyford3000", "mike_cox2674", "da.mion2025", "itsyodadonnie", "sargsyan_olymp", "weilee_yeap", "boonepronold", "collin_talaina", "chiten_nugget", "oli.hejnow", "thijsding", "thelajewjew", "senjufn__oway", "g59a1dn", "dre_da2", "tbavi_n", "briankelly_8", "not_sonick_2026", "grif.fith117", "griddy_grady", "le0n_765", "fweli6x_", "jayleelohse", "izaiahtheking_", "jeremy2dawk", "jam26187", "chinesechippy67", "hampter_man10", "eliano_the_dude", "tjp272", "ale.xdevine", "devin.the.goat.shore", "jacob_strozier", "tht01xj", "rilejansy15", "pinheadlarry2026", "stanmanthefig", "andreutubeta", "cooper.botts", "e_dac11", "codymcqueston", "8610patrick", "fernandochxx", "vancer_ytr2", "oliver_7455", "messnerfinn", "darren_sammartino", "eskilvestli", "ro.nan3445", "liamd00ley", "mrnuggy556", "hannahmichy08", "zack.haskins16", "ash.er.fast", "this_man259", "e.anderson.2030", "jeremiah_wanye_slack", "therealpondking", "erik_wood68", "spencer_kennedy_", "p12980852", "yates_surfing", "chillhero84", "jaydeng0613", "coleryanrobinson", "perlagiesbrecht", "adam.the.ajr.fan11.11", "braydenstorm0", "j_b_allbee", "tjidoux725", "theotisx", "robert_cooney13", "annaclairebmartin", "psyko_day_walker", "kevindotson1", "nothing_bad_racing", "eternal_memesheheheh", "drewc79697", "clearsight5555", "cdawg4372", "brycen_suemori", "preaton_daniels", "among_tico_yt", "weemzy23", "itzcloudzzz", "jack_ferrari450", "carterskates29", "emans_cracklab", "dirtroad_rebel", "olliverio_901", "jojo.gthl10", "coltt581", "luhh_118", "rafethesoontonbepilot", "nick_vince", "cam682964", "rafita7938", "matheopoiriers", "ronnie_usherenko", "nash.siemens", "logan_o_r", "olicoco2007", "17adam77", "noah_campbell456", "dax_always_be_fishing3", "jdogswab_20", "ela_plichta2007", "that0ne_weirdo", "nessa_confessa.6", "jaxson_soccer48", "alexjclark615", "razor_noah", "laightonallen", "kannonkensing", "logan.o1070", "girouard_gavin", "melaniemartin7808", "sharshy9900", "xbox.taterman", "harpermadduxk", "wilsoncalam", "thatone2012hemi3", "_ellll777", "jdowdall92", "masonspomer", "farmboy__06", "georgiashaw131", "vitaminmatt1", "tyler_pirc", "victorbitzel", "zach.asa", "the_epic_cena_fan_", "human.guy123", "burgerburgan", "klausaviation", "bonix_twink", "king.shootahbihh", "junior47838", "lucas.8157", "alanthompson2108", "ben_reust", "ljolly09", "lucas.n.t0907", "gautelehne", "bradleyjucha", "ishansinha328", "daniel.v.meehan", "calebbond_007", "brody_glaze18", "brodyweibs1525", "william.bryan.3323", "rl.warden", "1legboy", "luca_looops", "ethanfoutch", "chunk_moon202", "kaiapoboy", "jstdj.2", "luke_sharrad", "kaden_l00", "johnmeade414", "trace_boutwell", "zr1_.corvette", "redn_eck308", "jayy__075", "x__kefe__x", "jacobdeluca01", "landon_sanders2009", "powdersugrr", "chairmanrou6", "samuel2539393", "free_bird.chicken", "church_thefur", "simo310507", "cade_farmer09", "yuu_igdrasil", "tobybeanslarson", "faolin2008", "ghsurfis", "kyle.r_21", "masonlabinski", "giovannixcriddell", "grahamduckman", "zachforrest18", "cote_bidwell1284", "spudinator404", "allen.ray.1656", "definetlyderek123", "kieferging", "madison_walther", "yoshy5672", "shipman_owen", "dwitta223", "newoffical_househusband", "kranjis_mcbasketball69", "feral.vile.vermin", "edd_m33qp", "quinn_mcfadin4", "nomadic_jackel", "mitmiller", "agressivepizza1", "slavko_accident", "2550fyo", "wirebaughnathan", "tomo_mcsorley", "blake_dasnake65", "jacob_hh23", "harrisonmailes", "wes.themess15", "_colto_n", "jetfox144", "izaiah_r18", "evannemchik", "ejdat_kid12", "franco_vlok", "tr3x2012", "eli.westgate", "klc7hl", "hj_blxde11_55", "eyandouglas", "scottskarvan", "dominichernandez1234", "chadpjeddie", "tthomas_mullerr", "crystallskull128", "mk3y_22", "gabekeller0212", "corunojustinelee", "cj17471", "dave_ich33", "joshg664", "middleclass_mx5", "la.princessawtf", "bigimacdaddy", "josh._.maxwell97", "ehcanadian69", "esther_knowes_best", "daniel774626", "jonahroberts45", "noey.suter", "yba1_8", "kevin.kowitz", "cade_austin2", "gb_jordan_", "knoonan027", "thisisethanhere", "i.ama.surfer", "tylerhanson57", "caleb.st.pierre", "treereaper31", "brice.moctezuma", "rylan.h08", "max.n.cheese.official", "the.potatoking17", "cepknight_8", "_bikelife_gavin", "banderson_829", "mylesturney2", "trcoops09", "cwalleh77", "jake.meister1175", "keviin_salaas", "eighteengump", "drake_deweerd", "auto_and_aero", "jade.low1", "user.94926333", "the_eddiefiallo", "butchconnorsjr", "bry_frm305", "blakelombardo2015", "joshig238", "clbbrumley", "brooklyn_2012___", "ojayo_nightz", "khumyboih", "ashtyn_hill730", "alfieferguson1450", "charliemig2014", "quinten.simoens2", "lucas_mould", "connor_mountjoy", "brodycoxson", "jaydenf781", "lecvin", "carlsenduff", "connor_appleby02", "arh_aant", "paytrain96", "zekeramire", "eli_brink1", "yo_guysy599", "farv15", "chase_boats", "carvell.32", "prettyuser._.lmao", "aydenhull132", "wil.lfin", "thecoch420", "tyler_wood666", "vigrosam", "idk_anymore_1487", "towels.478", "isaia.kc", "robbienyirfea", "pierson.fletcher", "josh_helkaa", "sc.vogt", "zach.bat14", "demt1t3s", "josh.mace2103", "colbath.jack", "stephen_ramsay_", "taylorwhitted10", "noahbrooks.trp", "aye_yeaux", "tucker_moto17", "yeah_nah_yea", "mason_morello38", "liamhopkins00", "si_titoj", "stephens.v4", "sssarspence", "ethan_marines", "damiasshadowblade", "metro_man_megamind", "marrii_banzzzz", "rydercraven44", "jaykobgeorge", "c_macdonald92", "fvckin.lvcky", "eddie_bruddah", "the_mr._arnold", "mrx.2966", "karson.stover", "hammondjax13", "connoralkestrup", "meghanwierzbicki01", "paxton_rathbun", "im.dead51", "keegmac1", "urbabruzi", "b_wils09", "cru_ahhh", "talyn_cheatham", "tyler5202009n", "punk_bunny06", "skinnerdemetri", "lillyflxwer", "jadentookthat", "tj.scribe", "maxi_moose27", "oskapew123", "leighton0504", "aviationtpa", "brianmac.26", "quad_the_ripper", "wyattwaller_", "c_schendy", "printlyperfect_ig", "the_goat_at_soccer67", "john.fields2026", "miguelgelacio1031", "fishmanvr32", "maybe_memes_here", "abil_for_you", "nts_cars", "broadway.carson", "nicholas.9755", "connor_dunneee", "liv3han_", "a_man_named_larry", "carter.kubow", "zigmeisterman", "charlie_backaitis_fishing", "chill_dude_69_the_2nd", "brandon783017", "johnny_conn77", "jake_hansen69", "d4m0nj4m3s", "iles.owen", "carson.huntley.94", "c.w._2025", "kenney_the_phantom", "ao.thatsit", "connorrowland14", "william_duramax007", "olinekd61", "kokoro_moeru", "bodash1018", "content.of.quality", "el_poopitothethird", "trueboblove", "dj_plays_music", "nootnoot682", "hexedbysasha", "loisprime", "ethancarroll_42", "agamkhokharr", "lewiswood782", "spencerneufeld2", "tatecondon2019", "ytmavbro19", "camclark023", "thebetterluke8", "thatlawnkidcam", "elijahw.ebster", "gavenhorrell", "dylanmichaelcoleman", "mjramirez0217", "big_man_on_deck_", "levijp14", "legend68484306", "caseybyrdwell", "tateglanzer", "cohen_lester21", "minefreet2", "joel73531", "pierson.0507", "leobonawandt", "jacksonblair90", "getsousad", "thejetterman", "zach676767676767", "ky.max123", "mechagodzilla8129", "liamvoigt1234", "vanskates39", "ducks_not_4_sale", "debruyckerr_s", "bradfield.sean_", "stilanden", "ehhhhh3186", "zip66_2", "ymcjojo", "steven6964davis", "cattlefarmnlife", "greenboihsb", "gecko.8840356", "theboog23", "willow_8901", "tkettle_", "chunf___", "carter.tiley6969", "shaemuss16", "hyundai_boi", "i.love_dragon.ball_z", "jimbobob_bb8", "ocean18325", "trd_tacos", "charles__188", "pietertje_05", "kinghostt_", "abdulbakko", "jonah_gouery", "thatblackman809", "garza1362", "ratboybsvr", "will.i.8m", "chameleon.8179003", "dmminshall", "mitchoo_0", "graham.o8", "daxtonvanbebber", "jxkeller99", "kokosinskijacob", "puget_sound.hound_", "wriggo211", "bighappy_13_", "evilassgamer", "jasper_throop", "jordanbonifield_", "martinwynn2009", "_ben_sellar_", "bxdbyy11", "aid5.05", "yyckane", "arrazab_eli", "davidrmurphy97", "rosebud4896", "smokeythehoghead", "dis.arp.difhight", "enzo.shreds", "tristindoudiet", "atlee_myers", "navyjuco", "nolan.804", "miles_pham_trumpet", "roberto.reyez582019", "trumpisthebest43", "luc_bridge", "nic_perps", "sophiabrown65", "davbarber04", "delson_4784", "itsjamesd2024", "banana__________1", "ry_2twizzy", "braedennilges", "brandon_the_jet", "wyatt88455", "evan84916", "harry_emm48", "brysonfr69", "anthem4.4.3", "dtb.aaron1", "nolanhitchner69", "2010_expedition", "the_spencetron", "ch28.38", "ayden.hunt.25", "solomonm05", "gagechicola", "ilovewilliambyron", "quandaviante.j", "zane31725", "wolfie_loko_666", "max_wolgast2.0", "the.official.lewis", "alex_designs2448", "korbinbrammer", "e_daney18", "mitch_jns06", "zacharytiberio", "braydenh.44", "isaka_indostan", "will_garnettt", "justt_carter", "hanumanulapraharsh", "anhnguyen4thewin", "by.yoel.photography", "jacob_c_davis", "kraysonricker", "saucey_75", "lko_cfd", "772_chrisk", "jojo_a_p_b", "adam.blakeney", "master_skyhawk", "blakenokes", "hi_bigass21", "ttvcook_", "doodydobs", "olibob17", "jjlessley", "deuce_7k", "jackbloomingburg", "piper_christ_l", "blue_reaper61", "furfag6644", "kota12.mp3", "sesehang.n11", "_queen.41bee", "og_goatroper", "matthewcfey", "random_gaming847", "the_0g_g", "noahhawkheredia", "gus_my_name_", "egocentricpaul", "flossvoyager", "stevenpattersonn", "cyle_myers55", "rory.mcclung", "_arjunprasad543", "48freedahustle", "owen.sivertsen21", "lucas_swiingle", "carterinman6", "braxtonleeglenn", "", "ducatchance", "skinniboigamer", "danielbangor1", "jndhyn", "savvyhopef", "ghughes2504", "lukie0328", "saltyv_v", "zed_tm19", "jamesjhall4", "riley_12_danielson", "ely67667", "bigboibray1217", "jordancalhoun919", "tarverkeenan", "st4r_mj08", "landensmith656", "bo_uis", "jordanc4557", "greysonsmant", "jallo12825", "leebennett720", "nuke_a_delic652", "haygamer08", "sebastianleemartinez", "starnerd3.0", "adamsmithty123", "erichhaley739", "christopherhouston784", "notanyofyourinterest", "_juke_box_hero", "luke.the.fish", "chrisnotfound_32", "mike.jenkins13", "gunnerhommer", "rhyinlindsey", "1979fourdoorlincolncontinental", "iyah.salud", "gordon_lam____", "gamer.juice41", "tylerweston__", "jamesdacheese", "rupdog15", "bennettduke8", "marco_mart_03", "baylin_dixon", "luke_howy16", "alexandria501911", "compnerd97", "alex_gorlesky", "zac_berie", "zacchh69", "evvanroy", "bentulafono_", "caleb_loves_guitars02", "mullock_bobby", "michaelhiggins781", "he__luvzjordy1", "felix_christian.11", "blaze120691", "koneko.hana", "callum_grovez", "codym2031", "ltdann199", "darcy_buckley76", "partin4740", "eneal2004", "izzy.eblen", "alex.delamar11", "mijah_cephas17", "mickey_vdm", "hunter_reed_duncan", "jamesleech100", "darkrayven001", "ryan_andrewzz", "localflourideaddict", "joeperry04", "sandy_fish63", "luh.lando_0", "jacques_coetzer_", "thomas_h4wke", "alobaidi_hamzah", "fontenot.jayden", "yahyakhan9159", "jsmithjr017", "ko2x._", "iguessimgodnow", "karstenben_11", "uzr_sxmson09", "denis1248525", "blackberrytheminilop", "yyc.rachael08", "", "brendandavis593", "diesel_davis_808", "worldwide_timestamp", "11sentinel11", "mcdowell_tucker", "roddles135", "adventure.with.alexander", "dtn_jayquan123", "slow_s3_xo", "chriscarty29", "coltks10", "evanzenk", "amaris35400", "702._mikey", "benjamingarnicaiii", "lennoxbergstrom", "tejay_idk", "ryanmulvay05", "sleepydev", "maxsavage680", "taddpole_oficial", "matthewjfraser14", "unko.zacko", "warren23574", "jeffwitt2022", "3ryd.er", "aiden_diefenbacher", "w.ill20.06", "jimbeatt09", "db721645", "thee_official_diorbabyyy", "shao_zhe_", "lmorton5233", "john3332884", "dylan_pentathlon53", "sam_hurn348", "brickships1912", "fredtyler223", "sujayr.talekar", "gadsbyalex", "ewanjardine_11", "kyeronstrickland", "connor_ess3x", "santiago246016", "notsoshort.amk", "ethangordonboxing", "aguycalledbob_", "fillinghamdeven", "aljohanncyruscasanza", "sophclimpsx", "mapbppbhavya", "danwiggins1996", "kaylow_13", "hyfrmda2358", "jacob.peters6", "koltenlittle_8", "jay_gomez24", "i.churchland13", "notnuggets123", "marcelskacel12", "i_am_here_but_i_am_confused", "jamesp0tato", "jordy_is_goated", "elijahhammock", "taanemainwaring", "bayleeshianne", "rayanhamza314", "coner9035", "michael.morleyb", "braxton_miller027", "melodenzelo", "velek_21", "jacksonkilburn29", "chicojay257", "farmer_0601", "travy_t_99", "yayas._w0rld", "itssnapping__noway", "john_elmendorf", "ryan_emerson_kershner", "horse.636132", "serranovaldivieso", "whadaflizzy", "matthew_karasack_48", "ladiesm8n217", "estellkajanae", "4._noway", "ka_caisson_", "zarlenga_lucas", "ggwyhp", "bobth_ebuilder927", "choochbot123", "luk8sm", "venom_plays7", "ranfateh_singh_natt", "gmt.1of1", "bigdunk1121", "davidoltenacu", "brodie_martin.11", "cateye6oh", "midnight_gaming77", "mrjoeybeans", "aprylf4", "jvictor.t", "patricialyons585", "liltoaster174", "chrisorourke123", "its.deivvv", "pelle.frey", "tobiastrengereid", "kevinthe_caniac72", "ekobielat", "railroader_landon", "stevengauthier574", "jonas_zib_fabricius", "autobolt2007", "stunnahx_david", "jacob_fuller_1460", "ky.an938", "arnob_hossain_2024", "johnathanhurren", "ricky__dutcher", "dunbaradam289", "caitlyn.feeley", "queenbitch11.23", "fwtx_huerta7", "chrisophantoms", "nita_rares_122", "peter.gesualdo", "diego_lovesoccer", "dickozandberg", "enarmodigh", "itz_ya_boiii_barend", "diamond_badger64", "felixkristoferelber", "martinlecinam", "dirtybyrd43", "pluto_stay", "max___mckay", "nazarene_ismail", "s.2shmood4u", "zacharydonk", "leon.hawtin", "thefriendlyone96", "blakefisher20", "juliayour_mom", "declanmcdougall", "dilpreet42547", "visseratti", "twinpower_12", "devin.wolfenbarger.14", "cohen.pedble", "joelbest20", "mihajlohaz", "turkun_demir", "alexus_brown67", "reilly_m16", "jamesmcintosh911", "hickson.co.nz", "fmidwlnm", "robertstygar28", "cory.clark.9406", "ary347p", "the_ameyaas", "seankazmouz", "georgesteu", "hayden_pryor_", "sofiab_gk", "prestonhernandez320", "shaquille_oatmeal2615", "blakecroad3", "reece_gibbs17", "tdevon434", "xxironpantherxx_prvt", "matt_d_08", "david_all_ison", "cab_316", "izzy_thebees", "7423__josh", "martin_is_here897", "imjustdade", "samk.1726", "kyson_adds", "chloe_cummins27", "rozgaaiden", "mors.vx", "xandersiple26", "williambull__", "jakubpycinski", "brandon_cek8", "trendon.k", "animalman99999", "colin89.7", "adam_obr2", "hudsonjonesracing", "freaky_little_homunculus", "danielgurney1", "lovely.danii._", "alfiepk_", "david.sud.123", "enozoria_grrpod", "iii.iamjamialyneseeee", "dragginmynuts00", "a.r.r.o.n.15", "hendrix_kurtz", "kxnz0._jay", "exxo530", "parker_cannon38", "itsnot_rinn", "wozza_1234", "kristopheredwards94", "meow24803", "certified_chevyy", "jack.lovejoy_", "dmitt3n", "alex.urbuc", "ben10bbills", "lenny_menten", "huhn_jeff", "kubica_lover83", "nicole_datgurl13", "motion_sol0", "860.bertto", "elmer_sunnman", "b.vld19", "shark_face375", "marty_mcfly673", "1br4_1m", "khyranwatkiss", "cam88876", "ykbdott_3", "midnight_muches_6.0", "elan_michael_catoe", "hudson13130", "kellan_the_monkey_", "jase104215", "colton_summers2008", "cobys.swims", "geigenbauausbildung2024_2027", "cheesetaker69", "tobi_toaster480", "salty_mccosh", "james413337", "brendan_rodriquez3806", "destin.blake_", "user_bostonn", "adxcra", "jedbannister90", "definitelystock_5.0", "clar.krw", "campingb2", "its_rayray_09", "j1st_edi55", "missionary_6.0", "sammh157", "ka_ylee348", "shaxdy.calmkiller", "_.no_ls_.taken._", "lloyd_1364", "blakenabess", "victortunell", "kowalski.kristian", "jtea41582", "jan_djonko", "marb.le212", "super.julek", "union_844", "jsprwtsn", "skidd_zie", "odriscoll_darragh", "ilovebikes103", "calebs.yyc", "mharisalfatah", "izz_jaybeee", "jakehalle34527548594", "blakelybarks", "clapped.2hundo", "jordytaffin", "thatch_25_11", "communisthater673", "lobster_larry_1234", "logan_jensen_55", "chandler_morris_glazer", "2strokebud", "alex7612148", "joel_perez_79", "logan77373", "landonrogers678", "dom_that_kid", "itznoah_gamit", "danny.oliver.3", "dragon.8593738", "smithpowell_5", "thaddeusgrundy11", "grubby_1601", "luhhkadoo_", "wesley_lucas19", "abenj2030", "tjsmoothb_", "andrew__puccio__", "unknown_2_009", "yoshidadeane", "boommummy1142", "owen_dichiara", "itsjust.carterr", "hafizhfaad", "kingjay12888", "tsizzle10", "caleb.land17", "kelley_2106", "nwd_2011", "maxnchezeeeeee", "clark_playing", "jackhargrave14", "bob2006500", "isack_85", "tristanluijt", "warship_boi", "powder_hound54", "duncan_23_7", "bennettkurtz13", "atiba9373", "homie_123chicken_jockey", "cami_is_the_goat_and_amazing", "richard._.goforth", "noblefinnley", "rtr_kam_red5", "turbodawgv11", "imjust_h3re", "amoney_7oh7", "fishinwithchris", "mrbeast34156", "s.showtime56", "samuel680160", "aj91552", "dinosaur.9454269", "lyman.patton10", "c_o_l_b_y1220", "gabsfrmda_870", "915._edgarr", "lilly_kostroun", "johnathan_2266", "jason_needshelp21", "parker_balow", "farmer_sim_25", "jp_schaetzle", "catanddogloveralltheway", "brad_earnest", "bigblackman___", "ron._.wzly", "thatt_mattt", "quinn.heal", "beckettwical", "chasegolfs2014", "eddie_hulten", "justinnnn092", "prathiiiiiiik.vasu", "bobby___rotz", "luke546507", "wdrumjosh1452", "jack_como0034", "aidenstaylor12", "monster21233", "maverick_3740", "sandman_kofi", "jjayspence2.0", "aubreehill79", "dimeeee_y", "sdffff620", "1bushmannvr2", "dexter_shorter_5", "totally_not_a_idiot_1345", "mason_the_s", "dustin41494", "bentleybondarchuk1", "sillychunkseal", "904connerrr", "nink0110", "khori_k6_football", "rodri89571", "c.noriega1020", "colemason56"];
 const UPDATED = "Nov 16, 2026";
 const GOAL = 10000;
 const COLORS = ['#f2c230', '#3a8fd9', '#d9433a', '#3fb58f', '#e57fb0', '#8a5cd6', '#f08a2e', '#5cc8e0'];
@@ -208,7 +221,8 @@ const COLORS = ['#f2c230', '#3a8fd9', '#d9433a', '#3fb58f', '#e57fb0', '#8a5cd6'
 const N = NAMES.length;
 const DECKS = Math.max(1, Math.round(Math.sqrt(N / 12)));
 const PER_SIDE = Math.ceil(N / (2 * DECKS));
-const index = new Map(NAMES.map((n, i) => [n.toLowerCase(), i]));
+const index = new Map(NAMES.map((n, i) => [n.toLowerCase(), i]).filter(([n]) => n));
+const BOOKED = NAMES.filter(Boolean).length; // empty name = cabin left open by an unfollow
 function place(i) {
   const perDeck = PER_SIDE * 2;
   const deck = Math.floor(i / perDeck), r = i % perDeck;
@@ -222,11 +236,13 @@ function cabinAt(deck, side, pos) {
 const ord = n => { const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
 const clean = s => s.trim().replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/[/?#].*$/, '').toLowerCase();
 
+const SECRET_OWNER = 'bentleybondarchuk1';
+const isSecretViewer = () => current !== null && missQuery === null && NAMES[current] === SECRET_OWNER;
 let current = null, isExample = false, side = 'S', missQuery = null;
 
 // ---------- header ----------
-document.getElementById('booked').textContent = N.toLocaleString('en-CA') + ' cabins booked';
-document.getElementById('barfill').style.width = Math.max(1.5, N / GOAL * 100).toFixed(2) + '%';
+document.getElementById('booked').textContent = BOOKED.toLocaleString('en-CA') + ' cabins booked';
+document.getElementById('barfill').style.width = Math.max(1.5, BOOKED / GOAL * 100).toFixed(2) + '%';
 document.getElementById('updated').textContent = UPDATED;
 (function avatar() {
   const c = document.getElementById('avatar'), g = c.getContext('2d'), r = 44;
@@ -242,9 +258,10 @@ document.getElementById('updated').textContent = UPDATED;
 // ---------- result + deck ----------
 function renderResult() {
   const el = document.getElementById('result');
+  document.getElementById('secretBuild').hidden = !isSecretViewer();
   if (current === null && missQuery === null) {
     el.innerHTML = `<div class="ticket"><div class="who"><span class="tag">Your cabin is waiting</span></div>
-      <h2>${N.toLocaleString('en-CA')} cabins on ${DECKS} decks</h2>
+      <h2>${BOOKED.toLocaleString('en-CA')} cabins on ${DECKS} decks</h2>
       <div class="facts"><span>Type your username above to find your balcony.</span></div></div>
       <div class="cabin-no"><div class="label">Cabin</div><div class="num outlined gold">#?</div></div>`;
     return;
@@ -260,7 +277,7 @@ function renderResult() {
   el.innerHTML = `<div class="ticket">
       <div class="who">${isExample ? '<span class="tag">Example</span>' : '<span class="tag found">Found you</span>'}<span>Balcony cabin</span></div>
       <h2>@${escapeHtml(NAMES[current])}</h2>
-      <div class="facts"><span>Deck <b>${p.deck + 1}</b> of ${DECKS}</span><span><b>${p.side === 'S' ? 'Starboard' : 'Port'}</b> side</span><span><b>${ord(p.pos + 1)}</b> balcony from the bow</span></div>
+      <div class="facts"><span>Deck <b>${p.deck + 1}</b> of ${DECKS}</span><span><b>${p.side === 'S' ? 'Starboard' : 'Port'}</b> side</span><span><b>${ord(p.pos + 1)}</b> balcony from the bow</span></div>${isSecretViewer() ? '<div class="facts"><span class="tag found">Only you can see this</span><span>Your RC car race track is on the top deck. Look for marker 5.</span></div>' : ''}
     </div>
     <div class="cabin-no"><div class="label">Cabin</div><div class="num outlined gold">#${current + 1}</div></div>`;
 }
@@ -282,7 +299,7 @@ function renderDeck() {
       const i = cabinAt(d, p.side, pos);
       const edge = (k === 0 || k === ordered.length - 1) ? ' edge' : '';
       if (i === null) return;
-      if (i < 0) { html += `<div class="cell empty${edge}"><span class="n">Deck ${d + 1}</span><span class="u">Open</span></div>`; return; }
+      if (i < 0 || !NAMES[i]) { html += `<div class="cell empty${edge}"><span class="n">Deck ${d + 1}</span><span class="u">Open</span></div>`; return; }
       const me = i === current ? ' me' : '';
       html += `<div class="cell${me}${edge}" style="background:${COLORS[i % COLORS.length]}"><span class="n">#${i + 1}</span><span class="u" title="@${escapeHtml(NAMES[i])}">@${escapeHtml(NAMES[i])}</span><button type="button" data-i="${i}" aria-label="Show cabin ${i + 1}, @${escapeHtml(NAMES[i])}"></button></div>`;
     });
@@ -390,7 +407,7 @@ function drawShip(t) {
     for (let pos = 0; pos < PER_SIDE; pos++) {
       const i = cabinAt(d, side, pos);
       const x = supX1 - (pos + 1) * cellW;
-      if (i < 0 || i === null) { ctx.fillStyle = SHADE; ctx.fillRect(x + 1.5, yTop + 3, cellW - 3, cellH - 5); continue; }
+      if (i < 0 || i === null || !NAMES[i]) { ctx.fillStyle = SHADE; ctx.fillRect(x + 1.5, yTop + 3, cellW - 3, cellH - 5); continue; }
       ctx.fillStyle = COLORS[i % COLORS.length]; ctx.fillRect(x + 1.5, yTop + 3, cellW - 3, cellH - 5);
       ctx.fillStyle = 'rgba(25,40,65,.8)'; ctx.fillRect(x + cellW * .2, yTop + cellH * .16, cellW * .6, cellH * .44);
     }
@@ -419,10 +436,6 @@ function drawShip(t) {
   ctx.fillStyle = 'rgba(190,225,255,.75)'; ctx.fillRect(tx0 + 6, deckTop - cellH * .9 - cellH * .45, tx1 - tx0 - 12, cellH * .45);
   ctx.fillStyle = '#ffffff'; ctx.fillRect(tx0 + 6, deckTop - cellH * 1.37, tx1 - tx0 - 12, 3);
   ctx.fillStyle = GLASS; for (let x = tx0 + 10; x < tx1 - 14; x += 18) ctx.fillRect(x, deckTop - cellH * .62, 11, cellH * .34);
-  // solarium dome at the fore end
-  const dx = supX1 - cabLen * .16, dw = cabLen * .2, dy = deckTop - cellH * 1.37;
-  ctx.fillStyle = 'rgba(170,215,250,.9)'; ctx.beginPath(); ctx.ellipse(dx, dy, dw / 2, cellH * 1.1, 0, Math.PI, 0); ctx.fill();
-  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; for (let k = -2; k <= 2; k++) { ctx.beginPath(); ctx.moveTo(dx + k * dw / 6, dy); ctx.lineTo(dx + k * dw / 9, dy - cellH * 1.05 * Math.cos(k / 3.2)); ctx.stroke(); }
   // water slides near the stern end
   const sx = supX0 + cabLen * .2, sy = deckTop - cellH * 1.37;
   ctx.lineCap = 'round';
@@ -437,7 +450,7 @@ function drawShip(t) {
   // ---- community builds ----
   const marks = [];
   // (1) pool + hot tub, midships: water shows through the glass windbreak
-  const px0 = supX0 + cabLen * .5, pw = cabLen * .16, wbTop = sy - cellH * .45 + 3;
+  const px0 = supX0 + cabLen * .58, pw = cabLen * .11, wbTop = sy - cellH * .45 + 3;
   ctx.fillStyle = '#4fd0f2'; ctx.fillRect(px0, sy - cellH * .3, pw, cellH * .3);
   ctx.fillStyle = 'rgba(255,255,255,.75)'; for (let x = px0 + 8; x < px0 + pw - 10; x += 22) ctx.fillRect(x, sy - cellH * .2, 12, 2);
   ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(px0 + 6, sy); ctx.lineTo(px0 + 6, sy - cellH * .5); ctx.quadraticCurveTo(px0 + 6, sy - cellH * .62, px0 + 16, sy - cellH * .62); ctx.stroke();
@@ -462,6 +475,27 @@ function drawShip(t) {
   ['#f2c230', '#3a8fd9', '#d9433a', '#ffffff'].forEach((c, k) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(tbx - cellW * .6 + k * cellW * .4, ly - cellH * .64, 3, 0, 7); ctx.fill(); });
   ctx.fillStyle = '#1e2a4d'; roundRect(lx0 + 8, ly - cellH * .42, cellW * 1.3, cellH * .42, 5); ctx.fill(); ctx.fillRect(lx0 + 8, ly - cellH * .62, 7, cellH * .3);
   marks.push({ n: 2, x: lx0 + lw / 2, y: ly - cellH * 1.95 });
+  // (4) RC runway along the fore part of the top deck
+  const rx0 = supX0 + cabLen * .78, rx1 = supX1 + frontLen * .1;
+  ctx.fillStyle = '#3b3f47'; ctx.fillRect(rx0, sy - 6, rx1 - rx0, 7);
+  ctx.fillStyle = '#ffffff'; for (let x = rx0 + 12; x < rx1 - 16; x += 22) ctx.fillRect(x, sy - 3.5, 11, 2);
+  ctx.fillStyle = '#ffd23f'; for (let x = rx0; x <= rx1; x += 18) { ctx.beginPath(); ctx.arc(x, sy - 7, 2.2, 0, 7); ctx.fill(); }
+  const pX = rx0 + (rx1 - rx0) * .55, pY = sy - cellH * .75;
+  ctx.fillStyle = '#e0453a'; roundRect(pX - 22, pY - 4, 44, 8, 4); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(pX - 6, pY - 2, 14, 4); ctx.fillStyle = '#e0453a'; ctx.fillRect(pX - 22, pY - 14, 6, 12);
+  marks.push({ n: 4, x: (rx0 + rx1) / 2, y: sy - cellH * 1.75 });
+  // (5) RC race track: only drawn when its owner is looking at their own cabin
+  if (isSecretViewer()) {
+  const kx0 = supX0 + cabLen * .44, kx1 = supX0 + cabLen * .56, kTop = sy - cellH * .55;
+  ctx.fillStyle = '#3b3f47'; ctx.beginPath(); ctx.moveTo(kx0, sy); ctx.lineTo(kx0 + 10, kTop); ctx.lineTo(kx1 - 10, kTop); ctx.lineTo(kx1, sy); ctx.closePath(); ctx.fill();
+  for (let x = kx0 + 10, k = 0; x < kx1 - 10; x += 9, k++) { ctx.fillStyle = k % 2 ? '#ffffff' : '#e0453a'; ctx.fillRect(x, kTop - 4, 9, 4); }
+  ctx.fillStyle = '#ffffff'; for (const x of [kx0 + cellW, kx1 - cellW]) ctx.fillRect(x, kTop - 16, 3, 12);
+  ctx.fillStyle = '#16181d'; ctx.fillRect(kx0 + cellW, kTop - 18, kx1 - kx0 - 2 * cellW + 3, 3);
+  const carX = kx0 + (kx1 - kx0) * .35;
+  ctx.fillStyle = '#3a8fd9'; roundRect(carX, kTop - 13, 22, 9, 3); ctx.fill();
+  ctx.fillStyle = '#16181d'; ctx.beginPath(); ctx.arc(carX + 5, kTop - 4, 3, 0, 7); ctx.arc(carX + 17, kTop - 4, 3, 0, 7); ctx.fill();
+  marks.push({ n: 5, x: (kx0 + kx1) / 2, y: sy - cellH * 1.75 });
+  }
   // (3) cruise-ship refit, marked on the bridge
   marks.push({ n: 3, x: supX1 + frontLen * .55, y: cabBot - DECKS * cellH - cellH * .2 });
   // funnel
@@ -528,12 +562,165 @@ function setSide(s) {
 }
 document.getElementById('sideS').addEventListener('click', () => setSide('S'));
 document.getElementById('sideP').addEventListener('click', () => setSide('P'));
-document.getElementById('shipTitle').textContent = `The ship today: ${N.toLocaleString('en-CA')} cabins on ${DECKS} decks`;
+document.getElementById('shipTitle').textContent = `The ship today: ${BOOKED.toLocaleString('en-CA')} cabins on ${DECKS} decks`;
 
+
+// ---------- cabin floor plan (top-down, about 4.6 m x 3.2 m plus a 1.3 m balcony) ----------
+function shade(hex, f) { const n = parseInt(hex.slice(1), 16); const c = [n >> 16, (n >> 8) & 255, n & 255].map(v => Math.round(f > 0 ? v + (255 - v) * f : v * (1 + f))); return '#' + c.map(v => v.toString(16).padStart(2, '0')).join(''); }
+function planSVG(i) {
+  const col = COLORS[i % COLORS.length], soft = shade(col, .72), deep = shade(col, -.25);
+  const ink = '#12161f', wall = 8, lbl = (x, y, t, a = 'middle') => `<text x="${x}" y="${y}" text-anchor="${a}" font-family="Montserrat, Arial, sans-serif" font-weight="800" font-size="19" fill="#5b6676" letter-spacing="1">${t}</text>`;
+  const secret = NAMES[i] === SECRET_OWNER && missQuery === null;
+  let g = '';
+  // sea, balcony, corridor
+  g += `<rect x="860" y="0" width="60" height="470" fill="#2a66c9"/>`;
+  for (let y = 40; y < 470; y += 46) g += `<path d="M868 ${y} q8 -7 16 0 t16 0 t16 0" stroke="#cfe2f4" stroke-width="3" fill="none"/>`;
+  g += `<rect x="0" y="0" width="70" height="470" fill="#e2e6ec"/>`;
+  g += `<rect x="690" y="20" width="166" height="430" fill="#d9b48a"/>`;
+  for (let y = 44; y < 450; y += 24) g += `<line x1="690" y1="${y}" x2="856" y2="${y}" stroke="#b98d5f" stroke-width="2"/>`;
+  // interior floor + rug
+  g += `<rect x="70" y="20" width="620" height="430" fill="#f6f1e7"/>`;
+  g += `<rect x="300" y="250" width="270" height="130" rx="18" fill="${soft}" stroke="${col}" stroke-width="4"/>`;
+  // bathroom
+  g += `<rect x="70" y="20" width="180" height="180" fill="#e9eef3"/>`;
+  for (let k = 0; k < 6; k++) g += `<line x1="${82 + k * 14}" y1="32" x2="${82 + k * 14}" y2="108" stroke="#c9d3dd" stroke-width="2"/>`;
+  g += `<rect x="80" y="30" width="80" height="80" fill="none" stroke="${ink}" stroke-width="4"/><circle cx="120" cy="70" r="5" fill="${ink}"/>`;
+  g += `<rect x="198" y="34" width="40" height="22" rx="6" fill="#fff" stroke="${ink}" stroke-width="4"/><ellipse cx="218" cy="78" rx="18" ry="24" fill="#fff" stroke="${ink}" stroke-width="4"/>`;
+  g += `<rect x="86" y="140" width="62" height="48" rx="8" fill="#fff" stroke="${ink}" stroke-width="4"/><ellipse cx="117" cy="164" rx="18" ry="12" fill="#cfe2f4" stroke="${ink}" stroke-width="3"/>`;
+  g += lbl(205, 150, 'BATH');
+  // closet
+  g += `<rect x="78" y="330" width="164" height="112" fill="#efe6d6" stroke="${ink}" stroke-width="4"/>`;
+  for (let k = 0; k < 9; k++) g += `<line x1="${96 + k * 16}" y1="350" x2="${96 + k * 16}" y2="424" stroke="#a88b63" stroke-width="3"/>`;
+  g += `<line x1="86" y1="346" x2="234" y2="346" stroke="${ink}" stroke-width="3"/>` + lbl(160, 322, 'CLOSET');
+  // bed with nightstands and lamps
+  g += `<rect x="270" y="30" width="50" height="50" rx="6" fill="#d9b48a" stroke="${ink}" stroke-width="4"/><circle cx="295" cy="55" r="12" fill="#ffd23f" stroke="${ink}" stroke-width="3"/>`;
+  g += `<rect x="554" y="30" width="50" height="50" rx="6" fill="#d9b48a" stroke="${ink}" stroke-width="4"/><circle cx="579" cy="55" r="12" fill="#ffd23f" stroke="${ink}" stroke-width="3"/>`;
+  g += `<rect x="330" y="24" width="214" height="268" rx="10" fill="${col}" stroke="${ink}" stroke-width="5"/>`;
+  g += `<rect x="330" y="24" width="214" height="70" rx="10" fill="#ffffff" stroke="${ink}" stroke-width="5"/>`;
+  g += `<rect x="344" y="36" width="88" height="44" rx="12" fill="#fff" stroke="${ink}" stroke-width="3"/><rect x="442" y="36" width="88" height="44" rx="12" fill="#fff" stroke="${ink}" stroke-width="3"/>`;
+  g += `<rect x="330" y="150" width="214" height="22" fill="${deep}"/>`;
+  // desk, TV, chair
+  g += `<rect x="300" y="400" width="220" height="44" rx="4" fill="#d9b48a" stroke="${ink}" stroke-width="4"/><rect x="350" y="440" width="120" height="8" fill="${ink}"/>`;
+  g += `<circle cx="410" cy="378" r="20" fill="${deep}" stroke="${ink}" stroke-width="4"/>` + lbl(410, 428, 'DESK + TV');
+  // sofa by the glass
+  g += `<rect x="604" y="290" width="62" height="150" rx="14" fill="#1e2a4d" stroke="${ink}" stroke-width="4"/><rect x="618" y="300" width="40" height="62" rx="9" fill="#2f3f6e"/><rect x="618" y="368" width="40" height="62" rx="9" fill="#2f3f6e"/>`;
+  // balcony furniture + glass rail
+  g += `<rect x="712" y="140" width="52" height="52" rx="12" fill="#fff" stroke="${ink}" stroke-width="4"/><rect x="712" y="278" width="52" height="52" rx="12" fill="#fff" stroke="${ink}" stroke-width="4"/>`;
+  g += `<circle cx="806" cy="235" r="28" fill="#fff" stroke="${ink}" stroke-width="4"/><circle cx="806" cy="235" r="9" fill="${col}"/>`;
+  g += `<line x1="856" y1="20" x2="856" y2="450" stroke="#9fd2f5" stroke-width="10"/>` + lbl(773, 420, 'BALCONY');
+  // walls (with gaps for the doors and the sliding glass)
+  g += `<path d="M70 20 H690 M70 450 H690 M70 20 V220 M70 310 V450 M250 20 V130 M250 190 V200 M250 200 H70" stroke="${ink}" stroke-width="${wall}" fill="none" stroke-linecap="square"/>`;
+  g += `<path d="M690 20 V60 M690 410 V450" stroke="${ink}" stroke-width="${wall}"/><line x1="690" y1="60" x2="690" y2="410" stroke="#9fd2f5" stroke-width="10"/><line x1="686" y1="235" x2="694" y2="235" stroke="${ink}" stroke-width="4"/>`;
+  g += `<path d="M690 20 H856 M690 450 H856" stroke="${ink}" stroke-width="5"/>`;
+  // door swings
+  g += `<path d="M160 310 A90 90 0 0 0 70 220" fill="none" stroke="${ink}" stroke-width="2" stroke-dasharray="6 6"/><line x1="70" y1="310" x2="160" y2="310" stroke="${ink}" stroke-width="4"/>`;
+  g += `<path d="M310 190 A60 60 0 0 0 250 130" fill="none" stroke="${ink}" stroke-width="2" stroke-dasharray="6 6"/><line x1="250" y1="190" x2="310" y2="190" stroke="${ink}" stroke-width="4"/>`;
+  // corridor + door plaque
+  g += `<text transform="translate(40 452) rotate(-90)" font-family="Montserrat, Arial, sans-serif" font-weight="800" font-size="19" fill="#5b6676" letter-spacing="2">CORRIDOR</text>`;
+  g += `<rect x="6" y="150" width="58" height="56" rx="8" fill="#ffd23f" stroke="${ink}" stroke-width="3"/><text x="35" y="270" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-weight="900" font-size="${i + 1 >= 1000 ? 15 : 18}" fill="${ink}" dy="-86">#${i + 1}</text>`;
+  if (secret) {
+    g += `<g transform="translate(470 302) rotate(-12)"><rect x="0" y="0" width="58" height="30" rx="7" fill="#3a8fd9" stroke="${ink}" stroke-width="3"/><circle cx="12" cy="31" r="7" fill="${ink}"/><circle cx="46" cy="31" r="7" fill="${ink}"/><circle cx="12" cy="-1" r="7" fill="${ink}"/><circle cx="46" cy="-1" r="7" fill="${ink}"/><rect x="38" y="8" width="12" height="14" rx="3" fill="#cfe2f4"/></g>` + lbl(520, 362, 'RC CAR');
+  }
+  return `<svg viewBox="0 0 920 470" role="img" aria-label="Floor plan of cabin ${i + 1}: bathroom, closet, bed, desk, sofa and a balcony facing the sea">${g}</svg>`;
+}
+
+// ---------- VIP penthouse suites (only shown to whoever searches these names) ----------
+const VIP = { declanmcdougall: 'trex', martinlecinam: 'guest' };
+const vipKind = i => (current !== null && missQuery === null && NAMES[i]) ? VIP[NAMES[i]] : undefined;
+function trexSVG(x, y) {
+  const g = '#4f9d47', d = '#2f6b2b', ink = '#12161f';
+  return `<g transform="translate(${x} ${y})">
+    <path d="M-30 14 Q-100 22 -136 58 Q-90 44 -30 42 Z" fill="${g}" stroke="${ink}" stroke-width="4"/>
+    <rect x="-34" y="44" width="20" height="50" rx="6" fill="${g}" stroke="${ink}" stroke-width="4"/><rect x="2" y="44" width="20" height="50" rx="6" fill="${g}" stroke="${ink}" stroke-width="4"/>
+    <path d="M-40 94 h30 M-4 94 h30" stroke="${ink}" stroke-width="6" stroke-linecap="round"/>
+    <ellipse cx="-6" cy="16" rx="50" ry="36" transform="rotate(-28 -6 16)" fill="${g}" stroke="${ink}" stroke-width="4"/>
+    <path d="M30 4 l16 8 M26 16 l14 8" stroke="${ink}" stroke-width="5" stroke-linecap="round"/>
+    <rect x="8" y="-74" width="86" height="54" rx="16" fill="${g}" stroke="${ink}" stroke-width="4"/>
+    <path d="M40 -36 H92" stroke="${ink}" stroke-width="3"/>
+    <path d="M46 -36 l4 8 l4 -8 l4 8 l4 -8 l4 8 l4 -8 l4 8 l4 -8" fill="#fff" stroke="${ink}" stroke-width="2"/>
+    <circle cx="44" cy="-56" r="7" fill="#fff" stroke="${ink}" stroke-width="2"/><circle cx="46" cy="-56" r="3.5" fill="${ink}"/>
+    <path d="M32 -66 l16 -4" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>
+    <path d="M-34 0 q10 -8 20 0 q10 -8 20 0" stroke="${d}" stroke-width="4" fill="none"/>
+  </g>`;
+}
+function guestSVG(x, y) {
+  const ink = '#12161f';
+  return `<g transform="translate(${x} ${y})">
+    <rect x="-70" y="-22" width="140" height="44" rx="20" fill="#7a8a5a" stroke="${ink}" stroke-width="4"/>
+    <path d="M-20 -22 V22 M10 -22 V22" stroke="#5f6e45" stroke-width="3"/>
+    <rect x="62" y="-20" width="40" height="40" rx="10" fill="#e0b98f" stroke="${ink}" stroke-width="4"/>
+    <path d="M62 -8 Q82 -34 102 -8 Z" fill="#c2362c" stroke="${ink}" stroke-width="4"/>
+    <circle cx="80" cy="-24" r="5" fill="#c2362c" stroke="${ink}" stroke-width="2"/>
+    <path d="M72 6 q8 6 16 0" stroke="${ink}" stroke-width="3" fill="none"/><path d="M70 -2 h6 M86 -2 h6" stroke="${ink}" stroke-width="3"/>
+    <path d="M66 12 q14 14 28 0" fill="#8a6a4a" opacity=".55"/>
+    <text x="118" y="-30" font-family="Montserrat, Arial, sans-serif" font-weight="900" font-size="22" fill="#5b6676">z z z</text>
+    <line x1="-104" y1="34" x2="-46" y2="-34" stroke="#8a5a2b" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="-44" cy="-38" r="14" fill="#d9433a" stroke="${ink}" stroke-width="3"/><circle cx="-48" cy="-42" r="3" fill="#fff"/><circle cx="-40" cy="-34" r="3" fill="#fff"/>
+  </g>`;
+}
+function penthouseSVG(i, kind) {
+  const col = COLORS[i % COLORS.length], soft = shade(col, .72), ink = '#12161f', gold = '#e8b93a';
+  const lbl = (x, y, t) => `<text x="${x}" y="${y}" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-weight="800" font-size="17" fill="#5b6676" letter-spacing="1">${t}</text>`;
+  let g = '';
+  g += `<rect x="860" y="0" width="60" height="470" fill="#2a66c9"/>`;
+  for (let y = 40; y < 470; y += 46) g += `<path d="M868 ${y} q8 -7 16 0 t16 0 t16 0" stroke="#cfe2f4" stroke-width="3" fill="none"/>`;
+  g += `<rect x="0" y="0" width="70" height="470" fill="#e2e6ec"/>`;
+  g += `<rect x="690" y="20" width="166" height="430" fill="#d9b48a"/>`;
+  for (let y = 44; y < 450; y += 24) g += `<line x1="690" y1="${y}" x2="856" y2="${y}" stroke="#b98d5f" stroke-width="2"/>`;
+  g += `<rect x="70" y="20" width="620" height="430" fill="#f6f1e7"/>`;
+  // marble bath with a freestanding tub
+  g += `<rect x="70" y="20" width="170" height="150" fill="#eef1f4"/>`;
+  g += `<ellipse cx="140" cy="62" rx="52" ry="26" fill="#fff" stroke="${ink}" stroke-width="4"/><ellipse cx="140" cy="62" rx="40" ry="16" fill="#cfe2f4"/>`;
+  g += `<rect x="86" y="112" width="118" height="40" rx="8" fill="#fff" stroke="${ink}" stroke-width="4"/><ellipse cx="116" cy="132" rx="14" ry="9" fill="#cfe2f4" stroke="${ink}" stroke-width="2"/><ellipse cx="174" cy="132" rx="14" ry="9" fill="#cfe2f4" stroke="${ink}" stroke-width="2"/>`;
+  g += `<circle cx="222" cy="44" r="13" fill="#fff" stroke="${ink}" stroke-width="3"/>` + lbl(150, 104, 'SPA BATH');
+  // walk-in closet
+  g += `<rect x="78" y="318" width="154" height="124" fill="#efe6d6" stroke="${ink}" stroke-width="4"/>`;
+  for (let k = 0; k < 8; k++) g += `<line x1="${94 + k * 17}" y1="334" x2="${94 + k * 17}" y2="372" stroke="#a88b63" stroke-width="3"/>`;
+  g += `<rect x="120" y="390" width="70" height="36" rx="6" fill="${gold}" stroke="${ink}" stroke-width="3"/>` + lbl(155, 310, 'WALK-IN CLOSET');
+  // bedroom: king bed
+  g += `<rect x="262" y="30" width="34" height="34" rx="5" fill="#d9b48a" stroke="${ink}" stroke-width="3"/><rect x="430" y="30" width="34" height="34" rx="5" fill="#d9b48a" stroke="${ink}" stroke-width="3"/>`;
+  g += `<rect x="300" y="26" width="126" height="168" rx="8" fill="${col}" stroke="${ink}" stroke-width="4"/><rect x="300" y="26" width="126" height="46" rx="8" fill="#fff" stroke="${ink}" stroke-width="4"/>`;
+  g += `<rect x="310" y="34" width="50" height="30" rx="9" fill="#fff" stroke="${ink}" stroke-width="2"/><rect x="366" y="34" width="50" height="30" rx="9" fill="#fff" stroke="${ink}" stroke-width="2"/>`;
+  g += `<rect x="300" y="118" width="126" height="14" fill="${gold}"/>` + lbl(363, 222, 'KING SUITE');
+  g += `<path d="M480 20 V150 M480 230 V330" stroke="${ink}" stroke-width="6"/>`;
+  // living + dining
+  g += `<rect x="496" y="250" width="180" height="160" rx="14" fill="${soft}" stroke="${col}" stroke-width="3"/>`;
+  g += `<path d="M512 274 H660 V300 H538 V396 H512 Z" fill="#1e2a4d" stroke="${ink}" stroke-width="4"/>`;
+  g += `<rect x="566" y="324" width="70" height="46" rx="8" fill="#d9b48a" stroke="${ink}" stroke-width="4"/>`;
+  g += `<rect x="520" y="60" width="120" height="64" rx="10" fill="#d9b48a" stroke="${ink}" stroke-width="4"/>`;
+  for (const [cx, cy] of [[540, 48], [580, 48], [620, 48], [540, 136], [580, 136], [620, 136]]) g += `<circle cx="${cx}" cy="${cy}" r="11" fill="#fff" stroke="${ink}" stroke-width="3"/>`;
+  g += `<path d="M290 300 q0 -36 40 -40 h70 q30 0 30 40 q0 44 -30 44 h-80 q-30 0 -30 -44 Z" fill="#16181d" stroke="${ink}" stroke-width="4"/><rect x="300" y="340" width="96" height="14" fill="#fff" stroke="${ink}" stroke-width="2"/>` + lbl(345, 380, 'GRAND PIANO');
+  // balcony: hot tub + loungers
+  g += `<circle cx="772" cy="110" r="52" fill="#e9eef2" stroke="${ink}" stroke-width="4"/><circle cx="772" cy="110" r="40" fill="#7fe3f5"/>`;
+  g += `<rect x="712" y="230" width="44" height="100" rx="12" fill="#fff" stroke="${ink}" stroke-width="4"/><rect x="788" y="230" width="44" height="100" rx="12" fill="#fff" stroke="${ink}" stroke-width="4"/>`;
+  g += `<line x1="856" y1="20" x2="856" y2="450" stroke="#9fd2f5" stroke-width="10"/>` + lbl(773, 430, 'BALCONY');
+  // walls + doors
+  g += `<path d="M70 20 H690 M70 450 H690 M70 20 V200 M70 290 V450 M240 20 V110 M240 160 V170 M240 170 H70" stroke="${ink}" stroke-width="8" fill="none" stroke-linecap="square"/>`;
+  g += `<path d="M690 20 V40 M690 430 V450" stroke="${ink}" stroke-width="8"/><line x1="690" y1="40" x2="690" y2="430" stroke="#9fd2f5" stroke-width="10"/>`;
+  g += `<path d="M690 20 H856 M690 450 H856" stroke="${ink}" stroke-width="5"/>`;
+  g += `<path d="M150 290 A80 80 0 0 0 70 210" fill="none" stroke="${ink}" stroke-width="2" stroke-dasharray="6 6"/><line x1="70" y1="290" x2="150" y2="290" stroke="${ink}" stroke-width="4"/>`;
+  g += `<text transform="translate(40 452) rotate(-90)" font-family="Montserrat, Arial, sans-serif" font-weight="800" font-size="19" fill="#5b6676" letter-spacing="2">CORRIDOR</text>`;
+  g += `<rect x="4" y="120" width="62" height="76" rx="8" fill="${gold}" stroke="${ink}" stroke-width="3"/><text x="35" y="150" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-weight="900" font-size="16" fill="${ink}">VIP</text><text x="35" y="176" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-weight="900" font-size="${i + 1 >= 1000 ? 14 : 16}" fill="${ink}">#${i + 1}</text>`;
+  // the extra guest
+  if (kind === 'trex') g += trexSVG(600, 168);
+  if (kind === 'guest') g += `<g transform="translate(585 205) scale(.82)">${guestSVG(0, 0)}</g>`;
+  return `<svg viewBox="0 0 920 470" role="img" aria-label="Floor plan of penthouse suite ${i + 1}">${g}</svg>`;
+}
+function renderPlan(animate) {
+  const el = document.getElementById('plan');
+  if (current === null || missQuery !== null) { el.hidden = true; el.innerHTML = ''; return; }
+  const p = place(current);
+  const vk = vipKind(current);
+  el.innerHTML = vk
+    ? `<div class="plan-head"><h3>Inside cabin #${current + 1}: VIP penthouse suite</h3><span>@${escapeHtml(NAMES[current])} · Deck ${p.deck + 1}, ${p.side === 'S' ? 'starboard' : 'port'} side · about 60 m² with the balcony</span></div>${penthouseSVG(current, vk)}`
+    : `<div class="plan-head"><h3>Inside cabin #${current + 1}</h3><span>@${escapeHtml(NAMES[current])} · Deck ${p.deck + 1}, ${p.side === 'S' ? 'starboard' : 'port'} side · about 19 m² with the balcony</span></div>${planSVG(current)}`;
+  el.hidden = false;
+  if (animate && !reduce) { el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+}
 function select(i, example) {
   current = i; isExample = example; missQuery = null;
   setSide(place(i).side);
-  renderResult(); renderDeck(); if (reduce) drawShip(0);
+  renderResult(); renderDeck(); renderPlan(true); if (reduce) drawShip(0);
   scrollShipTo(i);
 }
 function scrollShipTo(i) {
@@ -541,7 +728,7 @@ function scrollShipTo(i) {
   const G = geom(), p = place(i); let x = G.supX1 - (p.pos + .5) * G.cellW; if (p.side === 'P') x = CW - x;
   sc.scrollLeft = x / CW * sc.scrollWidth - sc.clientWidth / 2;
 }
-function miss(q) { missQuery = q; renderResult(); renderDeck(); if (reduce) drawShip(0); }
+function miss(q) { missQuery = q; renderResult(); renderDeck(); renderPlan(false); if (reduce) drawShip(0); }
 
 // ---------- search ----------
 const q = document.getElementById('q'), sugg = document.getElementById('sugg');
@@ -550,7 +737,7 @@ function suggest() {
   const s = clean(q.value);
   if (!s) { sugg.classList.remove('open'); matches = []; return; }
   const starts = [], has = [];
-  for (let i = 0; i < N; i++) { const n = NAMES[i].toLowerCase(); if (n.startsWith(s)) starts.push(i); else if (n.includes(s)) has.push(i); if (starts.length >= 6) break; }
+  for (let i = 0; i < N; i++) { if (!NAMES[i]) continue; const n = NAMES[i].toLowerCase(); if (n.startsWith(s)) starts.push(i); else if (n.includes(s)) has.push(i); if (starts.length >= 6) break; }
   matches = starts.concat(has).slice(0, 6); active = -1;
   if (!matches.length) { sugg.classList.remove('open'); return; }
   sugg.innerHTML = matches.map((i, k) => `<button type="button" role="option" data-i="${i}" id="opt${k}"><span>@${escapeHtml(NAMES[i])}</span><small>#${i + 1}</small></button>`).join('');
